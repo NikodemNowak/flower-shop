@@ -1,11 +1,50 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "./store/store";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import flowerActions from "./store/actions/flowerActions";
+import {
+    Button,
+    makeStyles,
+    Paper,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+    TextField
+} from "@material-ui/core";
+import {NewFlower} from "./store/reducer/flowerReducer";
+
+const useStyles = makeStyles({
+    table: {
+        minWidth: 650,
+    },
+    root: {
+        '& > *': {
+            width: '25ch',
+        },
+    },
+});
 
 const FlowerView = () => {
     const dispatch = useDispatch();
+    const classes = useStyles();
     const { isLoading, flowers } = useSelector((state: AppState) => state.flower);
+    const [flower, setFlower] = useState({
+        name: '',
+        description: '',
+        price: 0
+    });
+    const saveFlower = () => {
+        flowerActions.saveFlower(dispatch, flower as NewFlower)
+        dispatch(flowerActions.getFlowers)
+    }
+
+    const deleteFlower = (id: number) => {
+        flowerActions.deleteFlower(dispatch, id)
+        dispatch(flowerActions.getFlowers)
+    }
 
     useEffect(() => {
        dispatch(flowerActions.getFlowers)
@@ -13,7 +52,41 @@ const FlowerView = () => {
 
     return (
         <div>
-            {isLoading ? <div>LADOWANIE...</div> : <div>Liczba zaladowanych kwiatkow: {flowers.length}</div>}
+            {isLoading ? <div>LADOWANIE...</div> : <div>
+                <TableContainer component={Paper}>
+                    <Table className={classes.table} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell>ID</TableCell>
+                                <TableCell>Name</TableCell>
+                                <TableCell>Description</TableCell>
+                                <TableCell>Price</TableCell>
+                                <TableCell>Delete</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {flowers.map((row) => (
+                                <TableRow key={row.id}>
+                                    <TableCell component="th" scope="row">
+                                        {row.id}
+                                    </TableCell>
+                                    <TableCell>{row.name}</TableCell>
+                                    <TableCell>{row.description}</TableCell>
+                                    <TableCell>{row.price}</TableCell>
+                                    <TableCell><Button onClick={() => {deleteFlower(row.id)}}>DELETE</Button></TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>}
+
+            <form className={classes.root} noValidate autoComplete="off">
+                <TextField label="Name" onChange={e => setFlower({...flower, name: e.target.value})}/><br/>
+                <TextField label="Description" onChange={e => setFlower({...flower, description: e.target.value})}/><br/>
+                <TextField label="Price" onChange={e => setFlower({...flower, price: Number(e.target.value)})}/>
+                <Button onClick={saveFlower}>Submit</Button>
+            </form>
         </div>
     )
 }

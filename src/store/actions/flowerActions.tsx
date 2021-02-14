@@ -1,59 +1,87 @@
 import {Action, Dispatch} from "redux";
-import {AxiosError} from "axios";
-import {Flower} from "../reducer/flowerReducer";
+import axios, {AxiosError} from "axios";
+import {Flower, NewFlower} from "../reducer/flowerReducer";
 
 export const FETCH_FLOWERS = 'FETCH_FLOWERS'
 export const FETCH_FLOWERS_SUCCESS = 'FETCH_FLOWERS_SUCCESS'
 export const FETCH_FLOWERS_FAILURE = 'FETCH_FLOWERS_FAILURE'
 
+export const SAVE_FLOWER = 'SAVE_FLOWER'
+export const SAVE_FLOWER_SUCCESS = 'SAVE_FLOWER_SUCCESS'
+export const SAVE_FLOWER_FAILURE = 'SAVE_FLOWER_FAILURE'
+
+export const DELETE_FLOWER = 'DELETE_FLOWER'
+export const DELETE_FLOWER_SUCCESS = 'DELETE_FLOWER_SUCCESS'
+export const DELETE_FLOWER_FAILURE = 'DELETE_FLOWER_FAILURE'
+
 export interface FetchFlowersAction extends Action<typeof FETCH_FLOWERS> {}
 export interface FetchFlowersSuccessAction extends Action<typeof FETCH_FLOWERS_SUCCESS> { flowers: Flower[] }
 export interface FetchFlowersFailureAction extends Action<typeof FETCH_FLOWERS_FAILURE> { error: AxiosError }
+
+export interface SaveFlowerAction extends Action<typeof SAVE_FLOWER> {}
+export interface SaveFlowerSuccessAction extends Action<typeof SAVE_FLOWER_SUCCESS> { flower: Flower }
+export interface SaveFlowerFailureAction extends Action<typeof SAVE_FLOWER_FAILURE> { error: AxiosError }
+
+export interface DeleteFlowerAction extends Action<typeof DELETE_FLOWER> {}
+export interface DeleteFlowerSuccessAction extends Action<typeof DELETE_FLOWER_SUCCESS> {}
+export interface DeleteFlowerFailureAction extends Action<typeof DELETE_FLOWER_FAILURE> { error: AxiosError }
 
 export type FlowerActions =
     | FetchFlowersAction
     | FetchFlowersSuccessAction
     | FetchFlowersFailureAction
+    | SaveFlowerAction
+    | SaveFlowerSuccessAction
+    | SaveFlowerFailureAction
+    |DeleteFlowerAction
+    |DeleteFlowerSuccessAction
+    |DeleteFlowerFailureAction
 
-const flowers = [
-    {
-        id: 1,
-        name: 'costam',
-        description: 'costam',
-        price: 10.50
-    },
-    {
-        id: 2,
-        name: 'costam2222',
-        description: 'costam2d2d2d',
-        price: 100.50
-    }
-]
+axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+axios.defaults.xsrfCookieName = "csrftoken";
+axios.defaults.withCredentials = true;
+
+const instance = axios.create({
+    baseURL: 'http://127.0.0.1:8000',
+    headers: {'Content-Type': 'application/json'}
+})
 
 const getFlowers = (dispatch: Dispatch) => {
     dispatch({type: FETCH_FLOWERS} as FetchFlowersAction)
 
-    // flowerService.getFlowers()
-    //     .then(result => {
-    //         // udalo sie
-    //         dispatch({type: FETCH_FLOWERS_SUCCESS, flowers: result.data} as FetchFlowersSuccessAction)
-    //     })
-    //     .catch(error => {
-    //         // jednak sie nie udalo
-    //         //dispatch({type: FETCH_FLOWERS_FAILURE, error: error as AxiosError} as FetchFlowersFailureAction)
-    //     })
+    instance.get('/flowers/').then(r =>
+        dispatch({type: FETCH_FLOWERS_SUCCESS, flowers: r.data} as FetchFlowersSuccessAction)
+    ).catch(error => {
+        dispatch({type: FETCH_FLOWERS_FAILURE, error: error as AxiosError} as FetchFlowersFailureAction)
+    })
+}
 
-    // ladujemy kwiatkit
+const saveFlower = (dispatch: Dispatch, newFlower: NewFlower) => {
+    dispatch({type: SAVE_FLOWER} as SaveFlowerAction)
 
-    // dla przykladu
-            dispatch({type: FETCH_FLOWERS_SUCCESS, flowers: flowers} as FetchFlowersSuccessAction)
+    instance.post('/flowers/', newFlower).then(r =>
+        dispatch({type: SAVE_FLOWER_SUCCESS, flower: r.data} as SaveFlowerSuccessAction)
+    ).catch(error => {
+        console.log(JSON.stringify(error))
+        dispatch({type: SAVE_FLOWER_FAILURE, error: error as AxiosError} as SaveFlowerFailureAction)
+    })
+}
 
+const deleteFlower = (dispatch: Dispatch, id: number) => {
+    dispatch({type: DELETE_FLOWER} as DeleteFlowerAction)
 
-
+    instance.delete("/flowers/" + id + "/").then(r =>
+        dispatch({type: DELETE_FLOWER_SUCCESS} as DeleteFlowerSuccessAction)
+    ).catch(error => {
+        console.log(JSON.stringify(error))
+        dispatch({type: DELETE_FLOWER_FAILURE, error: error as AxiosError} as DeleteFlowerFailureAction)
+    })
 }
 
 const flowerActions = {
-    getFlowers
+    getFlowers,
+    saveFlower,
+    deleteFlower
 }
 
 export default flowerActions
