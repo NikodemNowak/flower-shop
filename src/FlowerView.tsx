@@ -15,6 +15,7 @@ import {
     TextField
 } from "@material-ui/core";
 import {NewFlower} from "./store/reducer/flowerReducer";
+import {Controller, useForm } from "react-hook-form";
 
 const useStyles = makeStyles({
     table: {
@@ -30,15 +31,18 @@ const useStyles = makeStyles({
 const FlowerView = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
+    const { control, handleSubmit, errors } = useForm();
     const { isLoading, flowers } = useSelector((state: AppState) => state.flower);
     const [flower, setFlower] = useState({
         name: '',
         description: '',
         price: 0
     });
-    const saveFlower = () => {
-        flowerActions.saveFlower(dispatch, flower as NewFlower)
-        dispatch(flowerActions.getFlowers)
+    const saveFlower = (data) => {
+        console.log(data)
+        console.log(errors)
+        //flowerActions.saveFlower(dispatch, flower as NewFlower)
+        //dispatch(flowerActions.getFlowers)
     }
 
     const deleteFlower = (id: number) => {
@@ -81,11 +85,19 @@ const FlowerView = () => {
                 </TableContainer>
             </div>}
 
-            <form className={classes.root} noValidate autoComplete="off">
-                <TextField label="Name" onChange={e => setFlower({...flower, name: e.target.value})}/><br/>
-                <TextField label="Description" onChange={e => setFlower({...flower, description: e.target.value})}/><br/>
-                <TextField label="Price" onChange={e => setFlower({...flower, price: Number(e.target.value)})}/>
-                <Button onClick={saveFlower}>Submit</Button>
+            <form className={classes.root} onSubmit={handleSubmit(saveFlower)}>
+                <Controller
+                    name="name"
+                    control={control}
+                    defaultValue={false}
+                    rules={{ required: true }}
+                    render={props =>
+                        <TextField label="Name" name="name"/>
+                    }
+                />
+                <TextField label="Description" name="description"/><br/>
+                <TextField label="Price" name="price" type="number"/>
+                <input type="submit">Submit</input>
             </form>
         </div>
     )
