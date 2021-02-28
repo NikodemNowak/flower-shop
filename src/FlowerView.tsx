@@ -1,7 +1,12 @@
 import {useDispatch, useSelector} from "react-redux";
 import {AppState} from "./store/store";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import flowerActions from "./store/actions/flowerActions";
+import {useForm, Controller} from 'react-hook-form';
+import {FormControl} from "@material-ui/core";
+import Grid from '@material-ui/core/Grid';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 import {
     Button,
     makeStyles,
@@ -15,8 +20,15 @@ import {
     TextField
 } from "@material-ui/core";
 import {NewFlower} from "./store/reducer/flowerReducer";
+import snackbarActions from "./store/actions/snackbarActions";
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
+    paper: {
+        marginTop: theme.spacing(8),
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
     table: {
         minWidth: 650,
     },
@@ -25,19 +37,22 @@ const useStyles = makeStyles({
             width: '25ch',
         },
     },
-});
+    submit: {
+        margin: theme.spacing(3, 0, 2),
+    },
+    button: {
+        margin: theme.spacing(1),
+    },
+}));
 
 const FlowerView = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
-    const { isLoading, flowers } = useSelector((state: AppState) => state.flower);
-    const [flower, setFlower] = useState({
-        name: '',
-        description: '',
-        price: 0
-    });
-    const saveFlower = () => {
-        flowerActions.saveFlower(dispatch, flower as NewFlower)
+    const {isLoading, flowers} = useSelector((state: AppState) => state.flower);
+    const {control, handleSubmit, errors: fieldsErrors} = useForm();
+
+    const saveFlower = (flowerData: NewFlower) => {
+        flowerActions.saveFlower(dispatch, flowerData as NewFlower)
         dispatch(flowerActions.getFlowers)
     }
 
@@ -47,7 +62,8 @@ const FlowerView = () => {
     }
 
     useEffect(() => {
-       dispatch(flowerActions.getFlowers)
+        dispatch(flowerActions.getFlowers)
+        snackbarActions.openSnackbar(dispatch, "message", "success")
     }, [])
 
     return (
@@ -73,20 +89,111 @@ const FlowerView = () => {
                                     <TableCell>{row.name}</TableCell>
                                     <TableCell>{row.description}</TableCell>
                                     <TableCell>{row.price}</TableCell>
-                                    <TableCell><Button onClick={() => {deleteFlower(row.id)}}>DELETE</Button></TableCell>
+                                    <TableCell>
+                                        <Button
+                                            variant="contained"
+                                            color="secondary"
+                                            className={classes.button}
+                                            startIcon={<DeleteIcon/>}
+                                            onClick={() => {
+                                                deleteFlower(row.id)
+                                            }}
+                                        >
+                                            DELETE
+                                        </Button></TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
                     </Table>
                 </TableContainer>
             </div>}
-
-            <form className={classes.root} noValidate autoComplete="off">
-                <TextField label="Name" onChange={e => setFlower({...flower, name: e.target.value})}/><br/>
-                <TextField label="Description" onChange={e => setFlower({...flower, description: e.target.value})}/><br/>
-                <TextField label="Price" onChange={e => setFlower({...flower, price: Number(e.target.value)})}/>
-                <Button onClick={saveFlower}>Submit</Button>
-            </form>
+            <div className={classes.paper}>
+                <form className={classes.root} onSubmit={handleSubmit(saveFlower)}>
+                    <FormControl fullWidth variant="outlined">
+                        <Grid container spacing={2}>
+                            <h1 style={{paddingLeft: 27}}>Add flower</h1>
+                            <Grid item xs={12}>
+                                <Controller
+                                    name="name"
+                                    as={
+                                        <TextField
+                                            autoFocus
+                                            autoComplete="name"
+                                            name="name"
+                                            variant="outlined"
+                                            fullWidth
+                                            id="name"
+                                            helperText={fieldsErrors.name ? fieldsErrors.name.message : null}
+                                            label="Name"
+                                            error={fieldsErrors.name}
+                                        />
+                                    }
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{
+                                        required: "You must specify Name",
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Controller
+                                    name="description"
+                                    as={
+                                        <TextField
+                                            autoFocus
+                                            autoComplete="description"
+                                            name="description"
+                                            variant="outlined"
+                                            fullWidth
+                                            id="description"
+                                            helperText={fieldsErrors.description ? fieldsErrors.description.message : null}
+                                            label="Description"
+                                            error={fieldsErrors.description}
+                                        />
+                                    }
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{
+                                        required: "You must specify Description",
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Controller
+                                    name="price"
+                                    as={
+                                        <TextField
+                                            autoFocus
+                                            autoComplete="price"
+                                            name="price"
+                                            variant="outlined"
+                                            fullWidth
+                                            id="price"
+                                            helperText={fieldsErrors.price ? fieldsErrors.price.message : null}
+                                            label="Price"
+                                            error={fieldsErrors.price}
+                                        />
+                                    }
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{
+                                        required: "You must specify Price",
+                                    }}
+                                />
+                            </Grid>
+                            <Button
+                                fullWidth
+                                variant="contained"
+                                color="primary"
+                                className={classes.submit}
+                                type="submit"
+                            >
+                                Submit
+                            </Button>
+                        </Grid>
+                    </FormControl>
+                </form>
+            </div>
         </div>
     )
 }
