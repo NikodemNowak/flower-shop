@@ -21,6 +21,7 @@ import {
 } from "@material-ui/core";
 import {NewFlower} from "./store/reducer/flowerReducer";
 import snackbarActions from "./store/actions/snackbarActions";
+import dialogActions from "./store/actions/dialogActions";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -63,7 +64,8 @@ const FlowerView = () => {
 
     useEffect(() => {
         dispatch(flowerActions.getFlowers)
-        snackbarActions.openSnackbar(dispatch, "message", "success")
+        // dialogActions.openDialog(dispatch, "header", "some interesting message")
+        // snackbarActions.openSnackbar(dispatch, "message", "success")
     }, [])
 
     return (
