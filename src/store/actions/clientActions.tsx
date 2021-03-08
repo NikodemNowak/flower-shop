@@ -7,6 +7,7 @@ import {
     FetchFlowersFailureAction,
     FetchFlowersSuccessAction
 } from "./flowerActions";
+import dialogActions from "./dialogActions";
 
 export const FETCH_CLIENTS = 'FETCH_CLIENTS'
 export const FETCH_CLIENTS_SUCCESS = 'FETCH_CLIENTS_SUCCESS'
