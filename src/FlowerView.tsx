@@ -30,9 +30,7 @@ const useStyles = makeStyles((theme) => ({
         flexDirection: 'column',
         alignItems: 'center',
     },
-    table: {
-        minWidth: 650,
-    },
+    table: {},
     root: {
         '& > *': {
             width: '25ch',
@@ -180,6 +178,29 @@ const FlowerView = () => {
                                     defaultValue=""
                                     rules={{
                                         required: "You must specify Price",
+                                    }}
+                                />
+                            </Grid>
+                            <Grid item xs={12}>
+                                <Controller
+                                    name="photo"
+                                    as={
+                                        <TextField
+                                            autoFocus
+                                            autoComplete="photo"
+                                            name="photo"
+                                            variant="outlined"
+                                            fullWidth
+                                            id="photo"
+                                            helperText={fieldsErrors.photo ? fieldsErrors.photo.message : null}
+                                            label="Photo URL"
+                                            error={fieldsErrors.photo}
+                                        />
+                                    }
+                                    control={control}
+                                    defaultValue=""
+                                    rules={{
+                                        required: "You must specify Photo URL",
                                     }}
                                 />
                             </Grid>

@@ -15,13 +15,15 @@ export interface Flower {
     id: number,
     name: string,
     description: string,
-    price: number
+    price: number,
+    photo: string
 }
 
 export interface NewFlower {
     name: string,
     description: string,
-    price: number
+    price: number,
+    photo: string
 }
 
 interface FlowerState {

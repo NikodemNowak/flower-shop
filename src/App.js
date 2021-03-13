@@ -8,7 +8,10 @@ import SnackbarHandler from "./SnackbarHandler";
 import DialogHandler from "./DialogHandler";
 import OrderView from "./store/OrderView";
 import SignIn from "./LoginPage";
-import Dashboard from "./Dashboard";
+import HomeBar from "./HomeBar";
+import FlowersAlbum from "./FlowersAlbum";
+import HomePage from "./HomePage";
+import UserPanel from "./UserPanel";
 
 function App() {
     return (
@@ -16,7 +19,7 @@ function App() {
             <div>
                 <SnackbarHandler/>
                 <DialogHandler/>
-                <Dashboard/>
+                <HomeBar/>
                 <Router>
                     <Route>
                         <Switch>
@@ -24,6 +27,9 @@ function App() {
                             <Route path="/clients" component={ClientView}/>
                             <Route path="/orders" component={OrderView}/>
                             <Route path="/login" component={SignIn}/>
+                            <Route path="/flowerTemplate" component={FlowersAlbum}/>
+                            <Route path="/userPanel" component={UserPanel}/>
+                            <Route path="/" component={HomePage}/>
                         </Switch>
                     </Route>
                 </Router>

@@ -2,7 +2,6 @@ import {Action, Dispatch} from "redux";
 import axios, {AxiosError} from "axios";
 import {LoginData} from "../reducer/loginReducer";
 import dialogActions from "./dialogActions";
-import {useHistory} from "react-router";
 
 export const LOGIN_CLIENT = 'LOGIN_CLIENT'
 export const LOGIN_CLIENT_SUCCESS = 'LOGIN_CLIENT_SUCCESS'
