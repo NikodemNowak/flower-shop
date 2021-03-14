@@ -12,6 +12,7 @@ import Container from '@material-ui/core/Container';
 import loginActions from "./store/actions/loginActions";
 import {useDispatch} from "react-redux";
 import {useHistory} from "react-router";
+import {AUTHENTICATION_SUCCESS} from "./store/actions/authenticationActions";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -48,7 +49,9 @@ const SignIn = () => {
 
     const handleButtonClick = () => {
         loginActions.loginClient(dispatch, user, () => {
+            dispatch({type: AUTHENTICATION_SUCCESS})
             history.push('/')
+            // window.location.reload(false);
         })
     }
 

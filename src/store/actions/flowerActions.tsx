@@ -1,6 +1,7 @@
 import {Action, Dispatch} from "redux";
 import axios, {AxiosError} from "axios";
 import {Flower, NewFlower} from "../reducer/flowerReducer";
+import instance from "./axios";
 
 export const FETCH_FLOWERS = 'FETCH_FLOWERS'
 export const FETCH_FLOWERS_SUCCESS = 'FETCH_FLOWERS_SUCCESS'
@@ -36,15 +37,6 @@ export type FlowerActions =
     |DeleteFlowerAction
     |DeleteFlowerSuccessAction
     |DeleteFlowerFailureAction
-
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.withCredentials = true;
-
-const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
-    headers: {'Content-Type': 'application/json'}
-})
 
 const getFlowers = (dispatch: Dispatch) => {
     dispatch({type: FETCH_FLOWERS} as FetchFlowersAction)

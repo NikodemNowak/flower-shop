@@ -1,6 +1,7 @@
 import {Action, Dispatch} from "redux";
 import axios, {AxiosError} from "axios";
 import {Order} from "../reducer/orderReducer";
+import instance from "./axios";
 
 export const FETCH_ORDERS = 'FETCH_ORDERS'
 export const FETCH_ORDERS_SUCCESS = 'FETCH_ORDERS_SUCCESS'
@@ -21,15 +22,6 @@ export type OrderActions =
     | FetchOrdersAction
     | FetchOrdersSuccessAction
     | FetchOrdersFailureAction
-
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.withCredentials = true;
-
-const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
-    headers: {'Content-Type': 'application/json'}
-})
 
 instance.interceptors.request.use(request => {
     const token = localStorage.getItem("accessToken")

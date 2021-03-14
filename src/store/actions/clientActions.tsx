@@ -8,6 +8,7 @@ import {
     FetchFlowersSuccessAction
 } from "./flowerActions";
 import dialogActions from "./dialogActions";
+import instance from "./axios";
 
 export const FETCH_CLIENTS = 'FETCH_CLIENTS'
 export const FETCH_CLIENTS_SUCCESS = 'FETCH_CLIENTS_SUCCESS'
@@ -28,15 +29,6 @@ export type ClientActions =
     | FetchClientsAction
     | FetchClientsSuccessAction
     | FetchClientsFailureAction
-
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.withCredentials = true;
-
-const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
-    headers: {'Content-Type': 'application/json'}
-})
 
 const getClients = (dispatch: Dispatch) => {
     dispatch({type: FETCH_CLIENTS} as FetchClientsAction)

@@ -5,6 +5,7 @@ import snackbarReducer from "./snackbarReducer";
 import dialogReducer from "./dialogReducer";
 import orderReducer from "./orderReducer";
 import loginReducer from "./loginReducer";
+import authenticationReducer from "./authenticationReducer";
 
 const rootReducer = combineReducers({
     flower: flowerReducer,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
     snackbar: snackbarReducer,
     dialog: dialogReducer,
     order: orderReducer,
-    login: loginReducer
+    login: loginReducer,
+    authentication: authenticationReducer
 })
 
 export default rootReducer

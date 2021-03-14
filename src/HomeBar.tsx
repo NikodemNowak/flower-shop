@@ -10,6 +10,9 @@ import StoreIcon from '@material-ui/icons/Store';
 import FilterVintageIcon from '@material-ui/icons/FilterVintage';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import PersonIcon from '@material-ui/icons/Person';
+import {useSelector} from "react-redux";
+import rootReducer from "./store/reducer/rootReducer";
+import {AppState} from "./store/store";
 
 const open = (url: string) => {
     const newWindow = window.open(url, "_self")
@@ -32,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function HomeBar() {
     const classes = useStyles();
+    const {isLoggedIn} = useSelector((state: AppState) => state.authentication)
 
     return (
         <div>
@@ -40,17 +44,24 @@ export default function HomeBar() {
                     <Typography variant="h6" className={classes.title}>
                         Flower shop
                     </Typography>
-                    <Button color="inherit" onClick={() => open('/')}> <HomeIcon/> Home</Button>
-                    <Button color="inherit" onClick={() => open('/flowers/')}> <LocalFloristIcon/> Flowers</Button>
-                    <Button color="inherit" onClick={() => open('/flowerTemplate/')}> <FilterVintageIcon/> Flowers Album</Button>
-                    <Button color="inherit" onClick={() => open('/orders/')}> <StoreIcon/> Orders</Button>
-                    <Button color="inherit" onClick={() => open('/userPanel/')}> <PersonIcon/> User Panel</Button>
+                    { console.log(isLoggedIn) }
+                    {isLoggedIn ?
+                        <div>
+                            <Button color="inherit" onClick={() => open('/')}> <HomeIcon/> Home</Button>
+                            <Button color="inherit" onClick={() => open('/flowers/')}> <LocalFloristIcon/> Flowers</Button>
+                            <Button color="inherit" onClick={() => open('/flowerTemplate/')}> <FilterVintageIcon/> Flowers Album</Button>
+                            <Button color="inherit" onClick={() => open('/orders/')}> <StoreIcon/> Orders</Button>
+                            <Button color="inherit" onClick={() => open('/userPanel/')}> <PersonIcon/> User Panel</Button>
+                            <Button color="inherit" onClick={() => {
+                                localStorage.clear()
+                                window.location.reload(false);
+                                open('http://localhost:3000/login')
+                            }}> <StoreIcon/> log Out</Button>
+                        </div>
+                        : <div/>
+                    }
                     <Button color="inherit" onClick={() => open('/login/')}> <VpnKeyIcon/> Login</Button>
-                    <Button color="inherit" onClick={() => {
-                        localStorage.clear()
-                        window.location.reload(false);
-                        open('http://localhost:3000/login')
-                    }}> <StoreIcon/> log Out</Button>
+
 
                 </Toolbar>
             </AppBar>

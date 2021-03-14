@@ -2,6 +2,7 @@ import {Action, Dispatch} from "redux";
 import axios, {AxiosError} from "axios";
 import {LoginData} from "../reducer/loginReducer";
 import dialogActions from "./dialogActions";
+import instance from "./axios";
 
 export const LOGIN_CLIENT = 'LOGIN_CLIENT'
 export const LOGIN_CLIENT_SUCCESS = 'LOGIN_CLIENT_SUCCESS'
@@ -23,15 +24,6 @@ export type LoginActions =
     | LoginClientAction
     | LoginClientSuccessAction
     | LoginClientFailureAction
-
-axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-axios.defaults.xsrfCookieName = "csrftoken";
-axios.defaults.withCredentials = true;
-
-const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000',
-    headers: {'Content-Type': 'application/json'}
-})
 
 const loginClient = (dispatch: Dispatch, loginData: LoginData, callback: () => any) => {
     dispatch({type: LOGIN_CLIENT} as LoginClientAction)
