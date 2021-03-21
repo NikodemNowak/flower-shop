@@ -11,8 +11,8 @@ import FilterVintageIcon from '@material-ui/icons/FilterVintage';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import PersonIcon from '@material-ui/icons/Person';
 import {useSelector} from "react-redux";
-import rootReducer from "./store/reducer/rootReducer";
 import {AppState} from "./store/store";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 const open = (url: string) => {
     const newWindow = window.open(url, "_self")
@@ -44,7 +44,6 @@ export default function HomeBar() {
                     <Typography variant="h6" className={classes.title}>
                         Flower shop
                     </Typography>
-                    { console.log(isLoggedIn) }
                     {isLoggedIn ?
                         <div>
                             <Button color="inherit" onClick={() => open('/')}> <HomeIcon/> Home</Button>
@@ -56,7 +55,7 @@ export default function HomeBar() {
                                 localStorage.clear()
                                 window.location.reload(false);
                                 open('http://localhost:3000/login')
-                            }}> <StoreIcon/> log Out</Button>
+                            }}> <ExitToAppIcon/> log Out</Button>
                         </div>
                         : <div/>
                     }

@@ -26,7 +26,7 @@ export const ProtectedRoute = ({component: Component, ...rest}) => {
 
                 instance.post('/api/token/refresh/', {refresh: localStorage.getItem("refreshToken")}).then(r => {
                     console.log(r)
-                    localStorage.setItem("accessToken", r.data.accessToken)
+                    localStorage.setItem("accessToken", r.data.access)
                     dispatch({type: AUTHENTICATION_SUCCESS})
                     setLoading(false)
                 }).catch(reason1 => {
@@ -41,7 +41,7 @@ export const ProtectedRoute = ({component: Component, ...rest}) => {
     }, [loading])
 
     if (loading) {
-        return <div></div>
+        return <div/>
     } else {
         return (
             <Route {...rest} render={(props) => (
@@ -57,8 +57,6 @@ export const ProtectedRoute = ({component: Component, ...rest}) => {
 export const PublicRoute = ({component: Component, ...rest}) => {
     const [loading, setLoading] = useState(true)
     const dispatch = useDispatch();
-    const {isLoggedIn} = useSelector((state: AppState) => state.authentication)
-
     useEffect(() => {
         async function checkAuthentication() {
             if (localStorage.getItem("accessToken") != null && localStorage.getItem("refreshToken") != null) {
@@ -71,7 +69,7 @@ export const PublicRoute = ({component: Component, ...rest}) => {
     }, [loading])
 
     if (loading) {
-        return <div></div>
+        return <div/>
     } else {
         return (
             <Route {...rest} render={(props) => (

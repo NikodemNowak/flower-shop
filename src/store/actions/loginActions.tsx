@@ -1,5 +1,5 @@
 import {Action, Dispatch} from "redux";
-import axios, {AxiosError} from "axios";
+import {AxiosError} from "axios";
 import {LoginData} from "../reducer/loginReducer";
 import dialogActions from "./dialogActions";
 import instance from "./axios";

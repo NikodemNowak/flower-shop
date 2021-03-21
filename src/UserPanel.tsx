@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -11,9 +11,13 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, FormControl,
+    DialogTitle, FormControl, Switch,
     TextField
 } from "@material-ui/core";
+import {useDispatch, useSelector} from "react-redux";
+import {AppState} from "./store/store";
+import userPreferencesActions from "./store/actions/userPreferencesActions";
+import flowerActions from "./store/actions/flowerActions";
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -40,8 +44,27 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const UserPanel = () => {
+    const dispatch = useDispatch();
+    const {darkMode} = useSelector((state: AppState) => state.userPreferences);
+    const isDarkMode = () => {
+        const mode = localStorage.getItem("darkMode")
+        if (mode != null) {
+            return JSON.parse(mode) === true
+        } else{
+            return darkMode
+        }
+    }
 
-    const {control, handleSubmit, errors: fieldsErrors} = useForm();
+    useEffect(() => {
+        userPreferencesActions.getUserInfo(dispatch)
+    }, [])
+
+    const themeToggler = () => {
+        userPreferencesActions.changeTheme(dispatch, !darkMode)
+    }
+
+
+    const {control, errors: fieldsErrors} = useForm();
     const classes = useStyles();
     const [openChangeData, setOpenChangeData] = useState(false);
     const [openPasswords, setOpenPasswords] = useState(false);
@@ -350,12 +373,13 @@ const UserPanel = () => {
                                         </Button>
                                     </DialogActions>
                                 </Dialog>
+                                <Switch checked={isDarkMode()} onChange={themeToggler}/> {!isDarkMode() ? <label>Light mode</label> :
+                                <label>Dark mode</label>}
                             </Grid>
                         </Grid>
                     </form>
                 </div>
             </Container>
-
         </div>
     );
 }

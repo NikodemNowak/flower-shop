@@ -9,4 +9,12 @@ const instance = axios.create({
     headers: {'Content-Type': 'application/json'}
 })
 
+instance.interceptors.request.use(config => {
+    let token = localStorage.getItem("accessToken")
+    if (token != null) {
+        config.headers.post['Authorization'] = 'Bearer ' + token;
+    }
+    return config
+})
+
 export default instance

@@ -17,7 +17,6 @@ const userPreferencesReducer = (state = initialState, action: UserPreferencesAct
         case "SAVE_PREFERENCES":
             return {
                 ...state,
-                darkMode: action.darkMode,
                 firstName: action.firstName,
                 lastName: action.lastName
             }
@@ -27,6 +26,11 @@ const userPreferencesReducer = (state = initialState, action: UserPreferencesAct
                 darkMode: false,
                 firstName: '',
                 lastName: ''
+            }
+        case "CHANGE_THEME_PREFERENCE":
+            return {
+                ...state,
+                darkMode: action.darkMode
             }
         default:
             return {
